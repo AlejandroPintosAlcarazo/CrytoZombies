@@ -1,0 +1,3 @@
+scope de funciones.
+modificadores
+memory dinamica en ram "new" ---- new string --> char *string else string [size]  new es malloc;
