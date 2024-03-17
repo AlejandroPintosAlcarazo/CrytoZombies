@@ -1,19 +1,19 @@
-pragma >=0.5.0 <0.6.0;
+pragma solidity >=0.5.0 <0.6.0;
 
-import "./zombiehelper.sol"
+import "./zombiehelper.sol";
 
 contract ZombieAttack is ZombieHelper {
 
 	uint randNonce = 0;
 	uint attackVictoryProbability = 70;
 
-	function randMod(uint _modulus) internal return(uint) {
+	function randMod(uint _modulus) internal returns(uint) {
 		randNonce = randNonce.add(1);
 		return uint (keccak256(abi.encodePacked(now,msg.sender,randNonce))) % _modulus;
 	}
-	function attack(uint _zombieId, uint _targetId) external ownerOf(_zombieId) {
+	function attack(uint _zombieId, uint _targetId) external onlyOwnerOf(_zombieId) {
 		Zombie storage myZombie = zombies[_zombieId];
-		zombie storage enemyZombie = zombies[_targetId];
+		Zombie storage enemyZombie = zombies[_targetId];
 		uint rand = randMod(100);
 		if (rand <= attackVictoryProbability) {
 			myZombie.winCount = myZombie.winCount.add(1);

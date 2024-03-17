@@ -1,18 +1,18 @@
-pragma solidity >=0.5.0 < 0.6.0;
+pragma solidity >=0.5.0 <0.6.0;
 
 import "./zombiefeeding.sol";
 
-contract ZombieHelper is zombiefeeding {
+contract ZombieHelper is ZombieFeeding {
 	
 	uint levelUpFee = 0.0001 ether;
 
 	modifier aboveLevel(uint _level, uint _zombieId) {
-		require(zombies[_zombieId]._level >= _level);
+		require(zombies[_zombieId].level >= _level);
 		_;
 	}
 
 	function withdraw() external onlyOwner {
-		address payble _owner = address(uint160(owner()));
+		address payable _owner = address(uint160(owner()));
 		_owner.transfer(address(this).balance);
 	}
 
@@ -20,17 +20,17 @@ contract ZombieHelper is zombiefeeding {
 		levelUpFee = _fee;
 	}
 
-	function levelUp(uint _zombieId) external payble {
-		require(msg.value = levelUpFee);
+	function levelUp(uint _zombieId) external payable {
+		require(msg.value == levelUpFee);
 		zombies[_zombieId].level++;
 	}
 
-	function changeName(uint _zombieId, string calldata _newName) external aboveLevel(2, _zombieId) ownerOf(_zombieId) {
+	function changeName(uint _zombieId, string calldata _newName) external aboveLevel(2, _zombieId) onlyOwnerOf(_zombieId) {
 		zombies[_zombieId].name = _newName;
 	}
 	
-	function changeDna(uint _zombieId, uint newDna) external aboveLevel(20, _zombieId) ownerOf(_zombieId) {
-		zombies[_zombieId].Dna = _newDna;
+	function changeDna(uint _zombieId, uint _newDna) external aboveLevel(20, _zombieId) ownerOf(_zombieId) {
+		zombies[_zombieId].dna = _newDna;
 	}
 
 	function getZombiesByOwner(address _owner) external view returns(uint[] memory){
